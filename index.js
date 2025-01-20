@@ -5,7 +5,7 @@ import * as cheerio from "cheerio";
 
 const app = new Hono();
 
-app.get("/cek-resi/:noresi", async (c) => {
+app.get("/cek-resi/jne/:noresi", async (c) => {
   const noresi = c.req.param("noresi");
 
   if (!noresi || noresi.trim() === "") {
@@ -85,7 +85,7 @@ app.get("/cek-resi/:noresi", async (c) => {
 });
 
 app.get("/", (c) => {
-    return c.json({ status: 200, author: 'Romi Muharom', message: "Selamat datang di API Cek Resi JNE, endpoint ada di /cek-resi/:noresi" });
+    return c.json({ status: 200, author: 'Romi Muharom', message: "Selamat datang di API Cek Resi JNE, endpoint ada di /cek-resi/jne/:noresi" });
 });
 
 const port = 3000;
