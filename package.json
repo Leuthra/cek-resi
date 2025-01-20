@@ -1,0 +1,28 @@
+{
+  "name": "cekresi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cekresi",
+    "resi",
+    "pengiriman"
+  ],
+  "author": "Romi Muharom",
+  "license": "ISC",
+  "description": "cekresi adalah package untuk mengecek resi pengiriman",
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
+    "hono": "^4.6.17"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
