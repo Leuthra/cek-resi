@@ -24,10 +24,14 @@ app.get("/cek-resi/:number", async (c) => {
   }
 });
 
+app.get("/", (c) => {
+  return c.json({ status: 200, author: 'Romi Muharom', message: "Selamat datang di API Cek Resi Indonesia, endpoint ada di /cek-resi/:noresi" });
+});
+
 app.notFound((c) => c.json({ error: "Halaman yang kamu akses tidak ada" }, 404));
 
 app.onError((c) => c.json({ error: "Terjadi kesalahan pada server" }, 500));
 
 const port = 3000;
-serve({ fetch: app.fetch, port });
 console.log(`Server running on http://localhost:${port}`);
+serve({ fetch: app.fetch, port });

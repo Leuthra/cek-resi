@@ -1,10 +1,11 @@
-# API Cek Resi JNE
+# API Cek Resi Indonesia
 
-API sederhana untuk melacak nomor resi JNE menggunakan scraping dari halaman resmi JNE. Dibangun menggunakan **Hono.js** dan memanfaatkan **Axios** serta **Cheerio** untuk pengambilan dan parsing data.
+API sederhana untuk melacak nomor resi dari berbagai jasa pengiriman di Indonesia. Dibangun menggunakan **Hono.js** dan memanfaatkan **Axios** serta **Cheerio** untuk pengambilan dan parsing data.
 
 ## Fitur
-- Melacak informasi detail pengiriman berdasarkan nomor resi.
-- Mendapatkan riwayat perjalanan paket.
+
+- Mendukung pelacakan untuk berbagai ekspedisi di Indonesia, seperti JNE, J&T, SiCepat, POS Indonesia, dan lainnya.
+- Mengembalikan informasi detail pengiriman, termasuk riwayat perjalanan paket.
 - Memberikan respons dalam format JSON yang mudah diintegrasikan.
 
 ---
@@ -12,13 +13,15 @@ API sederhana untuk melacak nomor resi JNE menggunakan scraping dari halaman res
 ## Instalasi
 
 1. **Kloning repository**
+
    ```bash
-   git clone https://github.com/username/cek-resi-jne.git
-   cd cek-resi-jne
+   git clone https://github.com/Leuthra/cek-resi.git
+   cd cek-resi
    ```
 
 2. **Pasang dependensi**
    Pastikan Anda memiliki **Node.js** terinstal, kemudian jalankan:
+
    ```bash
    npm install
    ```
@@ -35,70 +38,71 @@ API sederhana untuk melacak nomor resi JNE menggunakan scraping dari halaman res
 ## Penggunaan
 
 ### **Endpoint**
-1. **GET `/cek-resi/jne/:noresi`**
-   Melacak informasi nomor resi.
+
+1. **GET `/cek-resi/:noresi`**
+   Melacak informasi nomor resi secara otomatis
+
+   **Parameter:**
+
+   - `noresi`: Nomor resi pengiriman.
 
    **Contoh Request:**
+
    ```bash
-   curl http://localhost:3000/cek-resi/jne/010190001491925
+   curl http://localhost:3000/cek-resi/023423949234324
    ```
 
    **Contoh Respons Berhasil:**
+
    ```json
    {
      "status": 200,
      "data": {
-       "awb": "012342342342",
-       "service": "Reguler",
-       "origin": "Jakarta",
-       "destination": "Surabaya",
-       "estimation": "19-01-2025",
-       "pod_date": "19-01-2025",
-       "shipper": {
-         "name": "john@doe",
-         "city": "Jakarta"
-       },
-       "receiver": {
-         "name": "yuri",
-         "city": "Surabaya"
-       },
-       "shipment": {
-         "date": "17-01-2025",
-         "koli": "1",
-         "weight": "1 KG",
-         "good_desc": "Paket Dokumen"
-       },
-       "received_by": {
-         "name": "shinta",
-         "title": "Penerima"
-       },
-       "history": [
-         {
-           "status": "SHIPMENT RECEIVED BY JNE COUNTER OFFICER",
-           "date": "17-01-2025 16:26"
-         },
-         {
-           "status": "RECEIVED AT SORTING CENTER",
-           "date": "17-01-2025 23:15"
-         },
-         {
-           "status": "DELIVERED TO [DIAH TTG SEBELAH]",
-           "date": "19-01-2025 15:05"
-         }
-       ],
-       "currentStatus": {
-         "status": "DELIVERED",
-         "date": "19-01-2025 15:05"
+       "valid": true,
+       "data": {
+         "expedisi": "JNE Express",
+         "noResi": "43534534545345",
+         "pengirim": "John Doe",
+         "tujuan": "Ohio",
+         "status": "Delivered",
+         "tanggalKirim": "2025-01-17",
+         "penerima": "DELIVERED TO [Yuu | 19-01-2025 15:05 | Jakarta ] (Delivered)",
+         "perjalanan": [
+           {
+             "tanggal": "17-01-2025 16:26",
+             "keterangan": "SHIPMENT RECEIVED BY JNE COUNTER OFFICER AT [JAKARTA]"
+           },
+           {
+             "tanggal": "17-01-2025 23:15",
+             "keterangan": "RECEIVED AT SORTING CENTER [JAKARTA]"
+           },
+           {
+             "tanggal": "17-01-2025 23:32",
+             "keterangan": "DEPARTED FROM TRANSIT [GATEWAY, MEGAHUB]"
+           },
+           {
+             "tanggal": "17-01-2025 23:49",
+             "keterangan": "PROCESSED AT SORTING CENTER [JAKARTA, MEGAHUB MACHINE-2]"
+           },
+           {
+             "tanggal": "18-01-2025 01:19",
+             "keterangan": "RECEIVED AT ORIGIN GATEWAY  [GATEWAY JAKARTA]"
+           },
+           {
+             "tanggal": "19-01-2025 00:51",
+             "keterangan": "RECEIVED AT WAREHOUSE [SUB, TEBEL INBOUND]"
+           },
+           {
+             "tanggal": "19-01-2025 09:36",
+             "keterangan": "WITH DELIVERY COURIER  [Jakarta, OPR SELATAN]"
+           },
+           {
+             "tanggal": "19-01-2025 15:05",
+             "keterangan": "DELIVERED TO [Yuu | 19-01-2025 15:05 | Jakarta ]"
+           }
+         ]
        }
      }
-   }
-   ```
-
-   **Contoh Respons Gagal (Resi tidak ditemukan):**
-   ```json
-   {
-     "status": 404,
-     "message": "Nomor resi tidak ditemukan"
    }
    ```
 
@@ -106,18 +110,41 @@ API sederhana untuk melacak nomor resi JNE menggunakan scraping dari halaman res
    Endpoint untuk pengecekan awal.
 
    **Contoh Request:**
+
    ```bash
    curl http://localhost:3000/
    ```
 
    **Contoh Respons:**
+
    ```json
    {
      "status": 200,
      "author": "Romi Muharom",
-     "message": "Selamat datang di API Cek Resi JNE, endpoint ada di /cek-resi/jne/:noresi"
+     "message": "Selamat datang di API Cek Resi Indonesia. Gunakan endpoint /cek-resi/:noresi untuk melacak pengiriman."
    }
    ```
+
+---
+
+## Ekspedisi yang Didukung
+
+- **JNE**
+- **J&T**
+- **ID Express**
+- **POS Indonesia**
+- **Ninja Xpress**
+- **Anteraja**
+- **Lion Parcel**
+- **Paxel**
+- **SAP Express**
+- **Lazada Express**
+- **Lazada Logistics**
+- **JDL Express**
+- **JX/J-Express**
+- **Kerry Express**
+- **SF Express**
+- Dan lainnya (dapat ditambahkan sesuai kebutuhan).
 
 ---
 
@@ -131,8 +158,8 @@ API sederhana untuk melacak nomor resi JNE menggunakan scraping dari halaman res
 
 ## Catatan
 
-- **Batasan:** API ini bergantung pada struktur HTML dari situs web JNE. Jika ada perubahan pada struktur HTML, scraper mungkin perlu diperbarui.
-- **Penggunaan Pribadi:** API ini dirancang untuk keperluan pribadi atau pengembangan. Pastikan untuk mematuhi kebijakan penggunaan dari pihak JNE.
+- **Batasan:** API ini bergantung pada struktur HTML dari situs web jasa pengiriman. Jika ada perubahan pada struktur HTML, scraper mungkin perlu diperbarui.
+- **Penggunaan Pribadi:** API ini dirancang untuk keperluan pribadi atau pengembangan. Pastikan untuk mematuhi kebijakan penggunaan dari setiap ekspedisi.
 
 ---
 
@@ -142,4 +169,8 @@ Proyek ini dilisensikan di bawah **MIT License**.
 
 ---
 
-Dikembangkan oleh **Romi Muharom**. 😊
+Dikembangkan oleh **Romi Muharom**.
+
+```
+
+```
