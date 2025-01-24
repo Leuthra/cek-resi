@@ -170,7 +170,3 @@ Proyek ini dilisensikan di bawah **MIT License**.
 ---
 
 Dikembangkan oleh **Romi Muharom**.
-
-```
-
-```
